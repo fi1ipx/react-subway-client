@@ -42,17 +42,18 @@ class App extends React.Component {
     console.log(`Option selected1:`, selectedOption1);
     console.log(`Option selected2:`, selectedOption2);
     if (selectedOption1 != null && selectedOption2 != null) {
-      console.log('Getting path from remote server...');
-      fetch('http://apiserver.com:3001/path')
+      var url = "http://localhost:8080/path?src=" + selectedOption1 + "&dst=" + selectedOption2;
+      console.log('Getting path from ' + url);
+      fetch(url)
       .then(res => res.json())
       .then(
         (result) => {
           this.setState({
             pathIsLoaded: true,
-            pathData: result.stations
+            pathData: result
           });
           console.log('Path fetched');
-          console.log(result.stations);
+          console.log(result);
           //this.setState({pathData: pathData});
         },
         // Note: it's important to handle errors here
@@ -68,23 +69,23 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount() {
-    fetch('http://apiserver.com:3001/answer')
+  componentWillMount() {
+    fetch('http://localhost:8080/stations')
     .then(res => res.json())
     .then(
       (result) => {
         this.setState({
           isLoaded: true,
-          stations: result.stations
+          stations: result
         });
         console.log('stations fetched');
-        console.log(result.stations);
+        console.log(result);
         var options = [];
-        result.stations.forEach(function(a){
-          //console.log(a);
-          var newElement = {value: a.name, id: a.id};
+        result.forEach(function(a){
+          var newElement = {value: a.name, id: a.id, label: a.name};
+          // console.log(a);
           if (a.lineNum === 1) {
-            newElement.label = <span><div className="sphere red"></div> {a.name}</span>;
+            newElement.label = <span><div className="sphere line1"></div> {a.name}</span>;
           } else if (a.lineNum === 2) {
             newElement.label = <span><div className="sphere green"></div> {a.name}</span>;
           } else if (a.lineNum === 3) {
@@ -112,17 +113,7 @@ class App extends React.Component {
 
   render() {
     const { selectedOption1, selectedOption2, isLoaded,
-      error, options ,pathIsLoaded, pathError, pathData } = this.state;
-
-    // if (error == null) {
-    //   console.log(stations);
-    // }
-    // else {
-    //   console.log(error)
-    // }
-
-    console.log("options: ");
-    console.log(options);
+      error, options ,pathIsLoaded, pathError, pathData } = this.state
 
     const columns = [{
       Header: 'Station id',

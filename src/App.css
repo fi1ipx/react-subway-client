@@ -1,4 +1,4 @@
-.red {
+.line1 {
   background-color: red;
 }
 .green {
@@ -39,6 +39,7 @@
 .select {
   width: 15%;
   display: inline-block;
+  text-align: left;
 }
 
 .selectblock {
